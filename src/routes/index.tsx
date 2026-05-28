@@ -1,15 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { lazy, Suspense } from "react";
-
-const CensusMap = lazy(() => import("@/components/CensusMap"));
+import { ClientOnly } from "@tanstack/react-router";
+import CensusMap from "@/components/CensusMap";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Census Mapping Dashboard" },
-      { name: "description", content: "Interactive GIS dashboard for analyzing village boundaries and detected building structures." },
-      { property: "og:title", content: "Census Mapping Dashboard" },
-      { property: "og:description", content: "Interactive GIS dashboard for analyzing village boundaries and detected building structures." },
+      { name: "description", content: "Interactive GIS dashboard for village boundaries and detected building structures." },
     ],
   }),
   component: Index,
@@ -18,8 +15,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center bg-slate-950 text-slate-400">Loading map…</div>}>
+    <ClientOnly fallback={<div className="flex h-screen items-center justify-center bg-slate-950 text-slate-400">Loading map…</div>}>
       <CensusMap />
-    </Suspense>
+    </ClientOnly>
   );
 }
