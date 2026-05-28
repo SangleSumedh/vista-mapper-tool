@@ -183,6 +183,7 @@ export default function CensusMap() {
           <TileLayer
             attribution='Tiles &copy; Esri'
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            maxNativeZoom={19}
             maxZoom={22}
           />
         )}
