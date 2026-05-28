@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ClientOnly } from "@tanstack/react-router";
-import CensusMap from "@/components/CensusMap";
+import { createFileRoute, ClientOnly } from "@tanstack/react-router";
+import { lazy, Suspense } from "react";
+
+const CensusMap = lazy(() => import("@/components/CensusMap"));
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,9 +15,16 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const fallback = (
+    <div className="flex h-screen items-center justify-center bg-slate-950 text-slate-400">
+      Loading map…
+    </div>
+  );
   return (
-    <ClientOnly fallback={<div className="flex h-screen items-center justify-center bg-slate-950 text-slate-400">Loading map…</div>}>
-      <CensusMap />
+    <ClientOnly fallback={fallback}>
+      <Suspense fallback={fallback}>
+        <CensusMap />
+      </Suspense>
     </ClientOnly>
   );
 }
