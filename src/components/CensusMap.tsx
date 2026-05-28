@@ -256,11 +256,9 @@ export default function CensusMap() {
           <div className="flex items-center justify-between border-b border-slate-800 p-4">
             <div>
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-amber-500 to-red-600">
-                  <Layers className="h-4 w-4 text-white" />
-                </div>
+                <img src="/logo.svg" className="h-8 w-8 object-contain rounded-md" alt="Vista Mapper Pro Logo" />
                 <h1 className="text-sm font-semibold tracking-tight">
-                  Census Mapping Dashboard
+                  Vista Mapper Pro
                 </h1>
               </div>
               <Badge variant="outline" className="mt-2 border-slate-700 bg-slate-900 text-[10px] font-mono text-slate-400">

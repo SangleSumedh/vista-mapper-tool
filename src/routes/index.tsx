@@ -6,7 +6,7 @@ const CensusMap = lazy(() => import("@/components/CensusMap"));
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Census Mapping Dashboard" },
+      { title: "Vista Mapper Pro" },
       { name: "description", content: "Interactive GIS dashboard for village boundaries and detected building structures." },
     ],
   }),
