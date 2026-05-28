@@ -52,7 +52,7 @@ export default function CensusMap() {
   const [houses, setHouses] = useState<FeatureCollection | null>(null);
   const [showBoundary, setShowBoundary] = useState(true);
   const [showHouses, setShowHouses] = useState(true);
-  const [showSatellite, setShowSatellite] = useState(true);
+  const [mapStyle, setMapStyle] = useState<"google-hybrid" | "google-satellite" | "esri" | "dark" | "none">("google-hybrid");
   const [selected, setSelected] = useState<{ id: number; props: HouseProps; center: [number, number]; area: number } | null>(null);
   const [search, setSearch] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -179,11 +179,35 @@ export default function CensusMap() {
         className="absolute inset-0 h-full w-full"
         style={{ background: "#0b1220" }}
       >
-        {showSatellite && (
+        {mapStyle === "google-hybrid" && (
           <TileLayer
-            attribution='Tiles &copy; Esri'
+            attribution="&copy; Google"
+            url="https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"
+            maxNativeZoom={20}
+            maxZoom={22}
+          />
+        )}
+        {mapStyle === "google-satellite" && (
+          <TileLayer
+            attribution="&copy; Google"
+            url="https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}"
+            maxNativeZoom={20}
+            maxZoom={22}
+          />
+        )}
+        {mapStyle === "esri" && (
+          <TileLayer
+            attribution="Tiles &copy; Esri"
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            maxNativeZoom={19}
+            maxNativeZoom={17}
+            maxZoom={22}
+          />
+        )}
+        {mapStyle === "dark" && (
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            maxNativeZoom={20}
             maxZoom={22}
           />
         )}
@@ -213,8 +237,8 @@ export default function CensusMap() {
       {!sidebarOpen && (
         <Button
           size="icon"
-          variant="secondary"
-          className="absolute left-4 top-4 z-[1000] bg-slate-900/90 border border-slate-700 hover:bg-slate-800"
+          variant="outline"
+          className="absolute left-4 top-4 z-[1000] h-8 w-8 bg-slate-950/95 border border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-100 shadow-md transition-colors"
           onClick={() => setSidebarOpen(true)}
         >
           <ChevronRight className="h-4 w-4" />
@@ -299,13 +323,48 @@ export default function CensusMap() {
 
             {/* Layer Control */}
             <Section title="Layer Control">
-              <LayerToggle
-                label="Satellite Imagery"
-                desc="Esri World Imagery"
-                color="#3b82f6"
-                checked={showSatellite}
-                onChange={setShowSatellite}
-              />
+              <div className="rounded-md border border-slate-800 bg-slate-900 p-2.5 space-y-2">
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className="h-3 w-3 rounded-sm ring-1 ring-white/10"
+                    style={{
+                      backgroundColor:
+                        mapStyle === "google-hybrid" || mapStyle === "google-satellite"
+                          ? "#10b981"
+                          : mapStyle === "esri"
+                          ? "#3b82f6"
+                          : mapStyle === "dark"
+                          ? "#6366f1"
+                          : "#475569",
+                    }}
+                  />
+                  <div>
+                    <div className="text-xs font-medium text-slate-100">Map Style</div>
+                    <div className="text-[10px] text-slate-500">Choose base map source</div>
+                  </div>
+                </div>
+                <select
+                  value={mapStyle}
+                  onChange={(e) => setMapStyle(e.target.value as any)}
+                  className="w-full h-9 rounded-md border border-slate-800 bg-slate-950 px-3 text-xs text-slate-200 cursor-pointer outline-none hover:border-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-500/40"
+                >
+                  <option value="google-hybrid" className="bg-slate-950 text-slate-200">
+                    Google Hybrid (Detailed Zoom)
+                  </option>
+                  <option value="google-satellite" className="bg-slate-950 text-slate-200">
+                    Google Satellite (Pure)
+                  </option>
+                  <option value="esri" className="bg-slate-950 text-slate-200">
+                    Esri World Imagery (Standard)
+                  </option>
+                  <option value="dark" className="bg-slate-950 text-slate-200">
+                    Dark Vector (CartoDB)
+                  </option>
+                  <option value="none" className="bg-slate-950 text-slate-200">
+                    No Base Layer
+                  </option>
+                </select>
+              </div>
               <LayerToggle
                 label="Block Boundary"
                 desc="Village outline (KML)"
